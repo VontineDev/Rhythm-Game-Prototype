@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Player OnTrigger {other.gameObject.name}");
         Debug.Log($"this is Trigger On PlayerController");
 
-        if(other.gameObject.tag =="PUNCH")
         if (other.gameObject.tag == "PUNCH")
         {
             GetDamage(10f);
