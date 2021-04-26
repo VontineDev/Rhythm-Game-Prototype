@@ -2,14 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class SpectrumData
+{
+    public List<float> listSpectrum = new List<float>();
+    public float instantaneousEnergy;
+    public float averageEnergy;
+}
+
 public class GetSpectrumDataExample : MonoBehaviour
 {
     AudioSource audio;
     public float[] spectrum = new float[256];
     public float[] maxSpectrum = new float[256];
+    public Dictionary<int, SpectrumData> dicSpectrumData = new Dictionary<int, SpectrumData>();
+
     void Start()
     {
         audio = GetComponent<AudioSource>();
+
+        int maxSp = 256 / 4;
+        int sp = 0;
+        while (sp < maxSp)
+        {
+            dicSpectrumData.Add(sp, new SpectrumData());
+        }
+
+
     }
 
     void Update()
@@ -25,6 +43,10 @@ public class GetSpectrumDataExample : MonoBehaviour
             i++;
         }
 
+        for (int j = 0; j < 64; j++)
+        {
+            dicSpectrumData[j / 4].listSpectrum.Add(spectrum[i]);
+        }
 
         //int i = 1;
         //while (i < spectrum.Length - 1)
