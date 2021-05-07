@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SpectrumData
 {
@@ -11,20 +12,40 @@ public class SpectrumData
 
 public class GetSpectrumDataExample : MonoBehaviour
 {
-    AudioSource audio;
-    public float[] spectrum = new float[256];
-    public float[] maxSpectrum = new float[256];
+
+    AudioSource audioSource;
+    public float[] spectrum;
+    public float[] maxSpectrum;
     public Dictionary<int, SpectrumData> dicSpectrumData = new Dictionary<int, SpectrumData>();
 
+
+    public Action SpectrumOperate;
+
+    public static GetSpectrumDataExample Instance
+    {
+        get;
+        set;
+    }
+    void Awake()
+    {
+        spectrum = new float[64];
+        maxSpectrum = new float[64];
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+
+    }
     void Start()
     {
-        audio = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
-        int maxSp = 256 / 4;
+        int maxSp = spectrum.Length / 4;
         int sp = 0;
         while (sp < maxSp)
         {
             dicSpectrumData.Add(sp, new SpectrumData());
+            sp++;
         }
 
 
@@ -32,7 +53,9 @@ public class GetSpectrumDataExample : MonoBehaviour
 
     void Update()
     {
-        audio.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+        //audioSource.GetOutputData(spectrum, 0);
+
         int i = 0;
         while (i < spectrum.Length)
         {
@@ -43,10 +66,10 @@ public class GetSpectrumDataExample : MonoBehaviour
             i++;
         }
 
-        for (int j = 0; j < 64; j++)
-        {
-            dicSpectrumData[j / 4].listSpectrum.Add(spectrum[i]);
-        }
+        //for (int j = 0; j < 64; j++)
+        //{
+        //    dicSpectrumData[j / 4].listSpectrum.Add(spectrum[i]);
+        //}
 
         //int i = 1;
         //while (i < spectrum.Length - 1)
