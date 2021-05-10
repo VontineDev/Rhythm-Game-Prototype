@@ -6,8 +6,8 @@ public class InstantiateCube : MonoBehaviour
 {
     public GameObject sampleCubePrefab;
     public GameObject sampleTextPrefab;
-    GameObject[] sampleCube = new GameObject[256];
-    GameObject[] sampleText = new GameObject[256];
+    GameObject[] sampleCube;
+    GameObject[] sampleText;
 
     public float maxSacle;
 
@@ -15,15 +15,20 @@ public class InstantiateCube : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        getSpectrum = FindObjectOfType<GetSpectrumDataExample>();
+        getSpectrum = GetSpectrumDataExample.Instance;
 
-        for (int i = 0; i < 256; i++)
+        var length = getSpectrum.spectrum.Length;
+
+        sampleCube = new GameObject[length];
+        sampleText = new GameObject[length];
+
+        for (int i = 0; i < length; i++)
         {
             GameObject instanceSampleCube = Instantiate(sampleCubePrefab);
             instanceSampleCube.transform.position = this.transform.position;
             instanceSampleCube.transform.parent = this.transform;
             instanceSampleCube.name = "SampleCube" + i;
-            this.transform.eulerAngles = new Vector3(0, -1.40625f * i, 0);
+            this.transform.eulerAngles = new Vector3(0, (360f / length) * i, 0);
             instanceSampleCube.transform.position = Vector3.forward * 100;
             sampleCube[i] = instanceSampleCube;
 
@@ -40,7 +45,7 @@ public class InstantiateCube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 256; i++)
+        for (int i = 0; i < getSpectrum.spectrum.Length; i++)
         {
             if (sampleCube != null)
             {
